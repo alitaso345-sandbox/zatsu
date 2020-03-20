@@ -1,5 +1,5 @@
 package greeting
 
 func Do() {
-	println("こんにちは")
+	println("こんにちは!!!")
 }
