@@ -1,7 +1,10 @@
 package main
 
-import "github.com/alitaso345-sandbox/zatsu/greeting"
+import (
+	"fmt"
+	"os"
+)
 
 func main() {
-	greeting.Do()
+	fmt.Println(os.Args)
 }
