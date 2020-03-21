@@ -2,17 +2,13 @@ package main
 
 import "fmt"
 
-type Stringer interface {
-	String() string
-}
+type Func func() string
 
-type Hex int
-
-func (h Hex) String() string {
-	return fmt.Sprintf("%x", int(h))
-}
+func (f Func) String() string { return f() }
 
 func main() {
-	var s Stringer = Hex(100)
-	fmt.Println(s.String())
+	var s fmt.Stringer = Func(func() string {
+		return "hi"
+	})
+	fmt.Println(s)
 }
