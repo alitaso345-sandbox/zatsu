@@ -1,17 +1,27 @@
 package main
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+	"log"
+)
 
-type Hoge struct {
-	N int
-}
-
-type Fuga struct {
-	Hoge
+func f() (rerr error) {
+	defer func() {
+		if r := recover(); r != nil {
+			if err, isErr := r.(error); isErr {
+				rerr = err
+			} else {
+				rerr = fmt.Errorf("else: %v", r)
+			}
+		}
+	}()
+	panic(errors.New("new error"))
+	return nil
 }
 
 func main() {
-	f := Fuga{Hoge{N: 100}}
-	fmt.Println(f.N)
-	fmt.Println(f.Hoge.N)
+	if err := f(); err != nil {
+		log.Fatal(err)
+	}
 }
