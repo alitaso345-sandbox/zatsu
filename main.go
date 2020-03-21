@@ -1,27 +1,24 @@
 package main
 
-import (
-	"errors"
-	"fmt"
-	"log"
-)
+type escape struct{}
 
-func f() (rerr error) {
-	defer func() {
-		if r := recover(); r != nil {
-			if err, isErr := r.(error); isErr {
-				rerr = err
-			} else {
-				rerr = fmt.Errorf("else: %v", r)
-			}
-		}
-	}()
-	panic(errors.New("new error"))
-	return nil
+func f() {
+	g()
+}
+
+func g() {
+	panic(escape{})
 }
 
 func main() {
-	if err := f(); err != nil {
-		log.Fatal(err)
-	}
+	defer func() {
+		if r := recover(); r != nil {
+			if _, ok := r.(escape); ok {
+				println("Escaped")
+			} else {
+				panic(r)
+			}
+		}
+	}()
+	f()
 }
