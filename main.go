@@ -7,6 +7,7 @@ func makeCh() chan int {
 }
 
 func recvCh(recv chan int) int {
+	go func() { recv <- 200 }()
 	return <-recv
 
 }
