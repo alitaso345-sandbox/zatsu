@@ -7,14 +7,21 @@ import (
 )
 
 func main() {
-	var m sync.RWMutex
-	m.RLock()
+	var wg sync.WaitGroup
+	wg.Add(1)
 	go func() {
-		time.Sleep(3 * time.Second)
-		m.RUnlock()
-		fmt.Println("unlock 1")
+		defer wg.Done()
+		time.Sleep(2 * time.Second)
+		fmt.Println("done1")
 	}()
-	m.RLock()
-	m.RUnlock()
-	fmt.Println("unlock 2")
+
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		time.Sleep(100 * time.Millisecond)
+		fmt.Println("done2")
+	}()
+
+	wg.Wait()
+	fmt.Println("done all")
 }
