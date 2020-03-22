@@ -1,24 +1,14 @@
 package main
 
-type escape struct{}
-
-func f() {
-	g()
-}
-
-func g() {
-	panic(escape{})
-}
+import (
+	"fmt"
+	"time"
+)
 
 func main() {
-	defer func() {
-		if r := recover(); r != nil {
-			if _, ok := r.(escape); ok {
-				println("Escaped")
-			} else {
-				panic(r)
-			}
-		}
+	go func() {
+		fmt.Println("別のゴールーチン")
 	}()
-	f()
+	fmt.Println("mainゴールーチン")
+	time.Sleep(50 * time.Millisecond)
 }
