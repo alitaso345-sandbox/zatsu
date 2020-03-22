@@ -4,7 +4,7 @@ import "fmt"
 
 func main() {
 	ch1 := make(chan int)
-	ch2 := make(chan string)
+	var ch2 chan string
 
 	go func() { ch1 <- 100 }()
 	go func() { ch2 <- "hi" }()
