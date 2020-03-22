@@ -1,18 +1,29 @@
 package main
 
-import "fmt"
-
-func makeCh() chan int {
-	return make(chan int)
-}
-
-func recvCh(recv <-chan int) int {
-	return <-recv
-
-}
+import (
+	"bufio"
+	"fmt"
+	"io"
+	"os"
+)
 
 func main() {
-	ch := makeCh()
-	go func(ch chan<- int) { ch <- 100 }(ch)
-	fmt.Println(recvCh(ch))
+	ch := input(os.Stdin)
+	for {
+		fmt.Print(">")
+		fmt.Println(<-ch)
+	}
+}
+
+func input(r io.Reader) <-chan string {
+	ch := make(chan string)
+
+	go func() {
+		s := bufio.NewScanner(r)
+		for s.Scan() {
+			ch <- s.Text()
+		}
+		close(ch)
+	}()
+	return ch
 }
