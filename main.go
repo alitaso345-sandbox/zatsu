@@ -6,9 +6,14 @@ import (
 )
 
 func main() {
+	defer fmt.Println("main done")
 	go func() {
-		fmt.Println("別のゴールーチン")
+		defer fmt.Println("goroutine1 done")
+		time.Sleep(3 * time.Second)
 	}()
-	fmt.Println("mainゴールーチン")
-	time.Sleep(50 * time.Millisecond)
+	go func() {
+		defer fmt.Println("goroutine2 done")
+		time.Sleep(2 * time.Second)
+	}()
+	time.Sleep(1 * time.Second)
 }
