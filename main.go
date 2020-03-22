@@ -1,29 +1,20 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
-	"io"
-	"os"
+	"sync"
+	"time"
 )
 
 func main() {
-	ch := input(os.Stdin)
-	for {
-		fmt.Print(">")
-		fmt.Println(<-ch)
-	}
-}
-
-func input(r io.Reader) <-chan string {
-	ch := make(chan string)
-
+	var m sync.RWMutex
+	m.RLock()
 	go func() {
-		s := bufio.NewScanner(r)
-		for s.Scan() {
-			ch <- s.Text()
-		}
-		close(ch)
+		time.Sleep(3 * time.Second)
+		m.RUnlock()
+		fmt.Println("unlock 1")
 	}()
-	return ch
+	m.RLock()
+	m.RUnlock()
+	fmt.Println("unlock 2")
 }
