@@ -1,27 +1,46 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
-	"sync"
+	"io"
+	"os"
 	"time"
 )
 
 func main() {
-	var wg sync.WaitGroup
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
-		time.Sleep(2 * time.Second)
-		fmt.Println("done1")
-	}()
+	ch := input(os.Stdin)
+	problems := []string{
+		"hello",
+		"world",
+		"alice",
+		"bob",
+		"cathy",
+		"domain",
+		"easy",
+	}
 
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
-		time.Sleep(100 * time.Millisecond)
-		fmt.Println("done2")
-	}()
+	for i := 0; i < len(problems); i++ {
+		fmt.Print(problems[i] + "> ")
 
-	wg.Wait()
-	fmt.Println("done all")
+		select {
+		case v := <-ch:
+			fmt.Println(">> " + v)
+		case <-time.After(5 * time.Second):
+			fmt.Println("time up")
+			i = len(problems)
+		}
+	}
+}
+
+func input(r io.Reader) <-chan string {
+	ch := make(chan string)
+
+	go func() {
+		s := bufio.NewScanner(r)
+		for s.Scan() {
+			ch <- s.Text()
+		}
+	}()
+	return ch
 }
