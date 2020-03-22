@@ -2,17 +2,17 @@ package main
 
 import "fmt"
 
+func makeCh() chan int {
+	return make(chan int)
+}
+
+func recvCh(recv chan int) int {
+	return <-recv
+
+}
+
 func main() {
-	ch1 := make(chan int)
-	var ch2 chan string
-
-	go func() { ch1 <- 100 }()
-	go func() { ch2 <- "hi" }()
-
-	select {
-	case v1 := <-ch1:
-		fmt.Println(v1)
-	case v2 := <-ch2:
-		fmt.Println(v2)
-	}
+	ch := makeCh()
+	go func() { ch <- 100 }()
+	fmt.Println(recvCh(ch))
 }
